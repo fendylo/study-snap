@@ -20,6 +20,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 @main
 struct StudySnapApp: App {
+    @StateObject private var authVM = AuthViewModel()
+    
     // register app delegate for Firebase setup
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
@@ -30,6 +32,7 @@ struct StudySnapApp: App {
     var body: some Scene {
         WindowGroup {
             StartingView()
+                .environmentObject(authVM)
         }
     }
 }

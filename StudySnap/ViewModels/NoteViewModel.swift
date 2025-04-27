@@ -28,8 +28,6 @@ class NoteViewModel: ObservableObject {
 
     // Fetch notes for a specific user
     func fetchNotes(for userId: String) {
-        print("FETCH NOTES")
-        print(userId)
         isLoading = true
         FirebaseService.shared.getCollection(
             collection: "notes",
@@ -121,6 +119,14 @@ class NoteViewModel: ObservableObject {
             } catch {
                 print("❌ Failed to load image data: \(error.localizedDescription)")
             }
+        }
+    }
+    
+    func submitQuestion(for note: Note, userQuestion: String, completion: @escaping (Result<String, Error>) -> Void) {
+        let context = (note.title.isEmpty ? "" : ("Title:" + note.title + "\n") ) + "Notes:" + note.content.joined(separator: "\n")
+
+        AIService.shared.askQuestion(context: context, question: userQuestion) { result in
+            completion(result)
         }
     }
 }

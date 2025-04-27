@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @StateObject var authVM = AuthViewModel()
+    @EnvironmentObject var authVM: AuthViewModel
     @State private var email = ""
     @State private var password = ""
     @ObservedObject private var nav = NavigationUtil.shared

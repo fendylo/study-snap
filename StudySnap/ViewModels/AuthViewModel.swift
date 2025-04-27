@@ -24,11 +24,16 @@ class AuthViewModel: ObservableObject {
     private let navigator = NavigationUtil.shared
 
     init() {
-        self.user = FirebaseService.shared.getCurrentUser()
-        if self.user != nil {
-            print(self.user)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                NavigationUtil.shared.replaceWith(.home)
+        fetchCurrentUser()
+    }
+
+    func fetchCurrentUser() {
+        FirebaseService.shared.getCurrentUser { [weak self] user in
+            DispatchQueue.main.async {
+                self?.user = user
+                if user != nil {
+                    self?.navigator.replaceWith(.home)
+                }
             }
         }
     }
@@ -74,6 +79,8 @@ class AuthViewModel: ObservableObject {
                 self?.isLoading = false
                 switch result {
                 case .success(let loggedUser):
+                    print("LOGIN SUCCESSFUL")
+                    print(loggedUser)
                     self?.user = loggedUser
                     UserDefaultUtil.set(loggedUser, forKey: "currentUser")
                     self?.navigator.replaceWith(.home)

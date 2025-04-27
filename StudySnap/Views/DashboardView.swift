@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DashboardView: View {
-    @StateObject var authVM = AuthViewModel()
+    @EnvironmentObject var authVM: AuthViewModel
     
     var body: some View {
         VStack(spacing: 16) {
@@ -29,11 +29,6 @@ struct DashboardView: View {
             .cornerRadius(8)
         }
         .padding()
-        .onAppear {
-            if let storedUser = UserDefaultUtil.get(User.self, forKey: "currentUser") {
-                authVM.user = storedUser
-            }
-        }
     }
 }
 

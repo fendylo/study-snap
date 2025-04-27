@@ -10,7 +10,7 @@ import SwiftUI
 
 struct StartingView: View {
     @ObservedObject private var nav = NavigationUtil.shared
-    @StateObject private var authVM = AuthViewModel()
+    @EnvironmentObject var authVM: AuthViewModel
 
     var body: some View {
         NavigationStack(path: $nav.path) {
@@ -32,7 +32,7 @@ struct StartingView: View {
                 Button("Continue") {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         if let storedUser = UserDefaultUtil.get(User.self, forKey: "currentUser") {
-                            authVM.user = storedUser
+//                            authVM.user = storedUser
                             nav.replaceWith(.home)
                         } else {
                             nav.replaceWith(.login)

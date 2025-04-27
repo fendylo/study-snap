@@ -16,8 +16,7 @@ class FirebaseService {
             if let error = error {
                 completion(.failure(error))
             } else if let firebaseUser = result?.user {
-                let customUser = User(firebaseUser: firebaseUser)
-                completion(.success(customUser))
+                self.fetchUserProfile(firebaseUser: firebaseUser, completion: completion)
             }
         }
     }
@@ -27,8 +26,7 @@ class FirebaseService {
             if let error = error {
                 completion(.failure(error))
             } else if let firebaseUser = result?.user {
-                let customUser = User(firebaseUser: firebaseUser)
-                completion(.success(customUser))
+                self.fetchUserProfile(firebaseUser: firebaseUser, completion: completion)
             }
         }
     }
@@ -37,9 +35,49 @@ class FirebaseService {
         try auth.signOut()
     }
 
-    func getCurrentUser() -> User? {
-        guard let firebaseUser = auth.currentUser else { return nil }
-        return User(firebaseUser: firebaseUser)
+    func getCurrentUser(completion: @escaping (User?) -> Void) {
+        guard let firebaseUser = auth.currentUser else {
+            completion(nil)
+            return
+        }
+
+        fetchUserProfile(firebaseUser: firebaseUser) { result in
+            switch result {
+            case .success(let user):
+                completion(user)
+            case .failure(let error):
+                print("❌ Failed to fetch user profile: \(error.localizedDescription)")
+                completion(nil)
+            }
+        }
+    }
+    
+    private func fetchUserProfile(firebaseUser: FirebaseAuth.User, completion: @escaping (Result<User, Error>) -> Void) {
+        let userId = firebaseUser.uid
+        let userRef = db.collection("users").document(userId)
+
+        userRef.getDocument { document, error in
+            if let error = error {
+                print("❌ Failed to fetch user profile after auth: \(error.localizedDescription)")
+                completion(.failure(error))
+                return
+            }
+
+            guard let document = document, document.exists, let data = document.data() else {
+                print("❌ No user document found after auth, fallback to FirebaseAuth info")
+                let fallbackUser = User(firebaseUser: firebaseUser)
+                completion(.success(fallbackUser))
+                return
+            }
+
+            if let customUser = User(documentData: data) {
+                completion(.success(customUser))
+            } else {
+                print("❌ Failed to parse Firestore document after auth, fallback to FirebaseAuth")
+                let fallbackUser = User(firebaseUser: firebaseUser)
+                completion(.success(fallbackUser))
+            }
+        }
     }
     
     // MARK: - Generic Firestore CRUD Operations

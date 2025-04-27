@@ -16,10 +16,25 @@ struct User: Identifiable, Codable {
 }
 
 extension User {
+    // Default init from FirebaseAuth.User (basic only)
     init(firebaseUser: FirebaseAuth.User) {
         self.id = firebaseUser.uid
         self.email = firebaseUser.email ?? ""
-        self.name = firebaseUser.displayName ?? "New User"
-        self.educationMajor = "" // default or fetched later
+        self.name = firebaseUser.displayName ?? "" // Empty by default
+        self.educationMajor = "" // Empty by default
+    }
+
+    // New init to init from Firestore document
+    init?(documentData: [String: Any]) {
+        guard
+            let id = documentData["id"] as? String,
+            let email = documentData["email"] as? String
+        else {
+            return nil
+        }
+        self.id = id
+        self.email = email
+        self.name = documentData["name"] as? String ?? ""
+        self.educationMajor = documentData["educationMajor"] as? String ?? ""
     }
 }
