@@ -56,6 +56,16 @@
             value = "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"
             isEnabled = "YES">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "CLOUDINARY_CLOUD_NAME"
+            value = "promptvisionai"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "CLOUDINARY_UPLOAD_PRESET"
+            value = "study_snap_unsigned"
+            isEnabled = "YES">
+         </EnvironmentVariable>
       </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction

@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import Foundation
 
-struct Note: Identifiable, Codable {
+struct Note: Identifiable, Codable, Hashable {
     var id: String
-    var title: String
-    var content: String
-    var imageURL: String?
     var userId: String
+    var title: String
+    var content: [String]
     var createdAt: Date
+    var updatedAt: Date
 }

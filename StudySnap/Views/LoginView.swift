@@ -8,8 +8,40 @@
 import SwiftUI
 
 struct LoginView: View {
+    @StateObject var authVM = AuthViewModel()
+    @State private var email = ""
+    @State private var password = ""
+    @ObservedObject private var nav = NavigationUtil.shared
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack(spacing: 16) {
+            Text("StudySnap Login")
+                .font(.largeTitle).bold()
+
+            TextField("Email", text: $email).textFieldStyle(.roundedBorder)
+            SecureField("Password", text: $password).textFieldStyle(.roundedBorder)
+
+            if let error = authVM.errorMessage {
+                Text(error).foregroundColor(.red)
+            }
+
+            Button("Login") {
+                authVM.signIn(email: email, password: password)
+            }
+            .padding()
+            .frame(maxWidth: .infinity)
+            .background(Color("Primary"))
+            .foregroundColor(.white)
+            .cornerRadius(8)
+
+            Button("Don't have an account? Register") {
+                nav.navigate(to: .register)
+            }
+            .font(.footnote)
+
+            Spacer()
+        }
+        .padding()
     }
 }
 

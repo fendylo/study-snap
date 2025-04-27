@@ -6,24 +6,30 @@
 //
 
 import SwiftUI
-import SwiftDotenv
+import FirebaseCore
 
 
+class AppDelegate: NSObject, UIApplicationDelegate {
+  func application(_ application: UIApplication,
+                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    FirebaseApp.configure()
+
+    return true
+  }
+}
 
 @main
 struct StudySnapApp: App {
+    // register app delegate for Firebase setup
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    
     init() {
-        // load in environment variables
-        do {
-            try Dotenv.configure()
-        } catch {
-            print("⚠️ Failed to load .env file: \(error.localizedDescription)")
-        }
+//        FirebaseApp.configure()
     }
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            StartingView()
         }
     }
 }
