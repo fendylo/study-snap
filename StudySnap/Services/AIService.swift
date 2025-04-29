@@ -6,15 +6,12 @@
 //
 
 // NOTE:
+//This is a file to interact with the AI API
 //Sends structured prompts to Groq/OpenAI
 //
 //Functions:
 //
-//summarizeNote(content: String)
-//
-//highlightKeyPoints(content: String)
-//
-//generateFlashcards(note: String)
+//highlightNoteTopic(content: String)
 //
 //generateQuiz(note: String)
 //

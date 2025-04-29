@@ -5,6 +5,10 @@
 //  Created by Fendy Lomanjaya on 25/4/2025.
 //
 
+// NOTE:
+// List all your page that you want to navigate in this file
+// Next register your page in the StartingView, (in the navigationDestination)
+
 
 import Foundation
 

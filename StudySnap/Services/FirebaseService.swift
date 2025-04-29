@@ -2,6 +2,10 @@ import Foundation
 import FirebaseAuth
 import FirebaseFirestore
 
+// NOTE:
+// Firebase Authenticationb
+// Firestore CRUD
+
 class FirebaseService {
     static let shared = FirebaseService()
     private let auth = Auth.auth()

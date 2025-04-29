@@ -6,10 +6,6 @@
 //
 
 //NOTE:
-//Aggregates user progress data
-//
-//Calculates flashcard stats, quiz averages
-//
-//Generates reminders and learning insights
-//
-//Used in: HomeView, DashboardView
+//Review DashboardView.swift to have ideas about the dashboard feature
+//Aggregates user progress data, performance and insights
+//Used in: DashboardView

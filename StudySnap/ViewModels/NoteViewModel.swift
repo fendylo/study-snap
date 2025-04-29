@@ -5,16 +5,14 @@
 //  Created by Fendy Lomanjaya on 21/4/2025.
 //
 
-
-
 //NOTE:
 //Upload typed or image-based notes
 //
-//Ask AI to summarize or highlight
+//Ask AI questions about the user's note
 //
 //Interacts with AIService and FirebaseService
 //
-//Used in: NoteEditorView, NoteDetailView
+//Used in: NoteView, NoteDetailView
 
 
 import Foundation

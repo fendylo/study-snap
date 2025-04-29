@@ -6,10 +6,7 @@
 //
 
 //NOTE:
+//Review QuizView.swift to have ideas about the quiz feature
+//Generates quizzes
 //Loads and evaluates quizzes
-//
-//Stores result by topic
-//
-//Tracks improvement over time
-//
-//Used in: QuizListView, QuizResultView
+//Used in: QuizView, QuizDetailView, QuizResultView

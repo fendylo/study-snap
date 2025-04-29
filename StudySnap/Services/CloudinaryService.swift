@@ -5,6 +5,9 @@
 //  Created by Fendy Lomanjaya on 25/4/2025.
 //
 
+// NOTE:
+// Upload photo to Cloudinary
+
 import Foundation
 import UniformTypeIdentifiers
 
