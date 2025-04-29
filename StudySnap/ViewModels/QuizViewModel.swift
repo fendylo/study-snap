@@ -26,6 +26,8 @@ class QuizViewModel: ObservableObject {
 
         if wordCount < minimumWordsThreshold {
             print("⚠️ Not enough text content to generate a quiz.")
+            let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "⚠️ Not enough note content to generate a quiz. Please add more text."])
+            completion(.failure(error))
             return
         }
 
@@ -39,7 +41,7 @@ class QuizViewModel: ObservableObject {
         1. A **short main topic** title (e.g., "Basics of Flutter", "Photosynthesis Overview").
         2. A list of \(AppConstants.MCQ_NO) multiple choice questions with \(AppConstants.MCQ_ANSWERS) answer options each.
 
-        Respond ONLY in this JSON format example:
+        Respond ONLY in this JSON format:
 
         {
           "topic": "Your Generated Topic Here",
@@ -63,14 +65,18 @@ class QuizViewModel: ObservableObject {
                 case .success(let content):
                     guard let quizData = content.data(using: .utf8) else {
                         print("❌ Failed to convert AI response to data")
+                        let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to process AI response."])
+                        completion(.failure(error))
                         return
                     }
 
                     do {
                         let quizResponse = try JSONDecoder().decode(GeneratedQuizResponse.self, from: quizData)
-                        
+
                         guard let user = UserDefaultUtil.get(User.self, forKey: "currentUser") else {
                             print("❌ No logged-in user.")
+                            let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "No logged-in user found."])
+                            completion(.failure(error))
                             return
                         }
 
@@ -95,13 +101,15 @@ class QuizViewModel: ObservableObject {
                                 completion(.failure(error))
                             }
                         }
-                        
+
                     } catch {
                         print("❌ Failed to decode Quiz Response: \(error.localizedDescription)")
+                        completion(.failure(error))
                     }
-                    
+
                 case .failure(let error):
                     print("❌ Failed to generate quiz: \(error.localizedDescription)")
+                    completion(.failure(error))
                 }
             }
         }

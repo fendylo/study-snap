@@ -218,7 +218,7 @@ struct NoteDetailsView: View {
                     quizSuccessMessage = "🎉 Quiz created, check the quiz tab! Good luck!"
                     showQuizSuccessAlert = true
                 case .failure(let error):
-                    quizSuccessMessage = "❌ Failed to generate quiz: \(error.localizedDescription)"
+                    quizSuccessMessage = "❌ Failed to generate quiz: \n\(error.localizedDescription)"
                     showQuizSuccessAlert = true
                 }
             }
