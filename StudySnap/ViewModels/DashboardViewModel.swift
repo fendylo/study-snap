@@ -7,5 +7,5 @@
 
 //NOTE:
 //Review DashboardView.swift to have ideas about the dashboard feature
-//Aggregates user progress data, performance and insights
+//Aggregates user progress data, performance and other beneficial insights
 //Used in: DashboardView

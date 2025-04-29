@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftDotenv
 
 struct ContentView: View {
     @StateObject private var viewModel = GroqViewModel()

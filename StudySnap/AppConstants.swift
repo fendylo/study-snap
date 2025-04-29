@@ -6,11 +6,7 @@
 //
 
 enum AppConstants {
-    static let maxNoteLength = 3000
-    static let confidenceLevels = 1...5
-    static let aiPromptSummarize = "Summarize the content below."
-    static let aiPromptHighlight = "Highlight key ideas in this content."
-    static let firebaseNotesCollection = "notes"
-    static let firebaseFlashcardsCollection = "flashcards"
-    static let firebaseQuizzesCollection = "quizzes"
+    static let QUIZ_NOTE_MIN_WORD = 20
+    static let MCQ_NO = 3
+    static let MCQ_ANSWERS = 4
 }

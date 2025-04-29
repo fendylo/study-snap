@@ -9,15 +9,18 @@ import SwiftUI
 
 struct Quiz: Identifiable, Codable {
     var id: String
+    var userId: String
+    var noteId: String
     var topic: String
     var questions: [QuizQuestion]
-    var score: Int
-    var completedAt: Date
+    var createdAt: Date
+    var completedAt: Date? // Nullable: filled after user finishes quiz
+    var score: Double?     // Nullable: filled after user finishes quiz
 }
 
-struct QuizQuestion: Identifiable, Codable {
-    var id: UUID = UUID()
-    let question: String
-    let choices: [String]
-    let answer: String
+struct QuizQuestion: Codable, Identifiable {
+    var id: String { question } // Optional trick
+    var question: String
+    var choices: [String]
+    var answer: String
 }

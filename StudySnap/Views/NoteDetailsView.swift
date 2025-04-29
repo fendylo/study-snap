@@ -28,6 +28,11 @@ struct NoteDetailsView: View {
     @State private var activeSheet: ActiveSheet? = nil
     @State private var userQuestion: String = ""
     @State private var aiAnswer: String = ""
+    
+    // Quiz generation variables
+    @StateObject private var quizViewModel = QuizViewModel()
+    @State private var showQuizSuccessAlert = false
+    @State private var quizSuccessMessage = ""
 
     var body: some View {
         ScrollView {
@@ -43,19 +48,32 @@ struct NoteDetailsView: View {
                 Text("Last updated: \(note.updatedAt.formatted())")
                     .font(.caption)
                     .padding(.horizontal)
-
-                // Ask AI Button
-                Button(action: {
-                    self.activeSheet = .askQuestion
-                }) {
-                    Label("Ask AI about this Note", systemImage: "sparkles")
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                HStack{
+                    // Ask AI Button
+                    Button(action: {
+                        self.activeSheet = .askQuestion
+                    }) {
+                        Label("Ask AI about this Note", systemImage: "sparkles")
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                    .padding(.horizontal)
+                    
+                    Button(action: {
+                        takeQuiz()
+                    }) {
+                        Label("Take Quiz", systemImage: "list.bullet.rectangle.portrait")
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.purple)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
 
                 Divider()
 
@@ -117,6 +135,13 @@ struct NoteDetailsView: View {
             case .showAnswer:
                 showAnswerSheet
             }
+        }
+        .alert(isPresented: $showQuizSuccessAlert) {
+            Alert(
+                title: Text("Quiz Generation"),
+                message: Text(quizSuccessMessage),
+                dismissButton: .default(Text("OK"))
+            )
         }
     }
 
@@ -180,6 +205,21 @@ struct NoteDetailsView: View {
                     self.aiAnswer = answer
                 case .failure(let error):
                     self.aiAnswer = "Error: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+    
+    func takeQuiz() {
+        quizViewModel.generateQuiz(for: note) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    quizSuccessMessage = "🎉 Quiz created, check the quiz tab! Good luck!"
+                    showQuizSuccessAlert = true
+                case .failure(let error):
+                    quizSuccessMessage = "❌ Failed to generate quiz: \(error.localizedDescription)"
+                    showQuizSuccessAlert = true
                 }
             }
         }

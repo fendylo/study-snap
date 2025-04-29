@@ -3,7 +3,7 @@ import FirebaseAuth
 import FirebaseFirestore
 
 // NOTE:
-// Firebase Authenticationb
+// Firebase Authentication
 // Firestore CRUD
 
 class FirebaseService {
@@ -56,28 +56,17 @@ class FirebaseService {
         }
     }
     
+    // function to return User object from firestore and authentication data
     private func fetchUserProfile(firebaseUser: FirebaseAuth.User, completion: @escaping (Result<User, Error>) -> Void) {
         let userId = firebaseUser.uid
-        let userRef = db.collection("users").document(userId)
-
-        userRef.getDocument { document, error in
-            if let error = error {
-                print("❌ Failed to fetch user profile after auth: \(error.localizedDescription)")
-                completion(.failure(error))
-                return
-            }
-
-            guard let document = document, document.exists, let data = document.data() else {
-                print("❌ No user document found after auth, fallback to FirebaseAuth info")
-                let fallbackUser = User(firebaseUser: firebaseUser)
-                completion(.success(fallbackUser))
-                return
-            }
-
-            if let customUser = User(documentData: data) {
-                completion(.success(customUser))
-            } else {
-                print("❌ Failed to parse Firestore document after auth, fallback to FirebaseAuth")
+        
+        FirebaseService.shared.getDocument(collection: "users", documentId: userId, model: User.self) { result in
+            switch result {
+            case .success(let user):
+                completion(.success(user))
+            case .failure(let error):
+                print("❌ Failed to fetch or decode user profile: \(error.localizedDescription)")
+                print("➡️ Falling back to basic FirebaseAuth user info.")
                 let fallbackUser = User(firebaseUser: firebaseUser)
                 completion(.success(fallbackUser))
             }

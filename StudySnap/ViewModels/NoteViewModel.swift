@@ -120,11 +120,24 @@ class NoteViewModel: ObservableObject {
         }
     }
     
+    // Submit question related to a note
     func submitQuestion(for note: Note, userQuestion: String, completion: @escaping (Result<String, Error>) -> Void) {
-        let context = (note.title.isEmpty ? "" : ("Title:" + note.title + "\n") ) + "Notes:" + note.content.joined(separator: "\n")
+        let pureTexts = note.content.filter { !$0.lowercased().starts(with: "http") }
+        let context = pureTexts.joined(separator: "\n")
 
-        AIService.shared.askQuestion(context: context, question: userQuestion) { result in
-            completion(result)
+        let systemPrompt = """
+        You are a helpful expert study assistant. Based on the provided note context, answer the user's question as clearly, concisely, and accurately as possible.
+
+        If the answer is not explicitly stated in the context, you must then **make the best reasonable guess** based on the information.
+
+        Note Context:
+        \(context)
+        """
+
+        AIService.shared.sendRequest(systemPrompt: systemPrompt, userPrompt: userQuestion) { result in
+            DispatchQueue.main.async {
+                completion(result)
+            }
         }
     }
 }

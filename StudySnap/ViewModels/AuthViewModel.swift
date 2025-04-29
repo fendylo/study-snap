@@ -10,7 +10,7 @@
 //
 //Tracks session state and current user
 //
-//Used in: LoginView, RegisterView, ProfileView
+//Used in: LoginView, RegisterView, DashboardView
 
 
 import Foundation
@@ -24,10 +24,7 @@ class AuthViewModel: ObservableObject {
     private let navigator = NavigationUtil.shared
 
     init() {
-        fetchCurrentUser()
-    }
-
-    func fetchCurrentUser() {
+        // fetch Current User
         FirebaseService.shared.getCurrentUser { [weak self] user in
             DispatchQueue.main.async {
                 self?.user = user
@@ -51,7 +48,6 @@ class AuthViewModel: ObservableObject {
                         self?.user = newUser
                         UserDefaultUtil.set(newUser, forKey: "currentUser")
                         
-                        // ✅ Use generic setDocument to insert user to Firestore
                         FirebaseService.shared.setDocument(
                             collection: "users",
                             documentId: newUser.id,
