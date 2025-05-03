@@ -1,6 +1,7 @@
 # 📘 StudySnap: Smart Study Companion
 
 **StudySnap** is an iOS native app developed using **SwiftUI**, designed to be a personalized study assistant for students and lifelong learners. The app empowers users to:
+
 - 📄 Capture and manage notes (text and images)
 - 🧪 Ask AI questions about their study notes (powered by Groq API)
 - 🎓 Automatically generate quizzes based on notes for self-assessment
@@ -24,18 +25,18 @@ The project emphasizes clean code practices, scalable architecture, and seamless
 
 ## 📁 Project Folder and File Organization
 
-| Folder/File | Purpose |
-|:--|:--|
-| **Models/** | 📄 Define core data models used across the app (e.g., `User`, `Note`, `Quiz`) |
-| **Services/** | 🚧 Handle external service interactions (e.g., `FirebaseService` for database/auth, `CloudinaryService` for images, `AIService` for Groq API) |
-| **Utilities/** | 💡 Helper classes and utilities (e.g., `UserDefaultsUtil` for local storage, `NavigationUtil` for centralized navigation management) |
-| **ViewModels/** | 🔄 Manage state and business logic for each screen following MVVM architecture (e.g., `AuthViewModel`, `NoteViewModel`, `DashboardViewModel`) |
-| **Views/** | 🔺 SwiftUI View files representing UI components/screens (e.g., `LoginView`, `NoteListView`, `NoteDetailsView`, `DashboardView`) |
-| **AppConstants.swift** | 📁 Contains shared constants used throughout the app (like colors, config keys). |
-| **Assets/** | 🖼️ Resource files like images, colors used in SwiftUI. |
-| **GoogleService-Info.plist** | 📄 Firebase configuration file required for Authentication and Firestore services. |
-| **StudySnapApp.swift** | 📲 Main entry point of the app (`@main`), setting up the root view and injecting environment objects. |
-| **.env** | 🔑 Securely stores API keys and environment-sensitive data. |
+| Folder/File                  | Purpose                                                                                                                                       |
+| :--------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Models/**                  | 📄 Define core data models used across the app (e.g., `User`, `Note`, `Quiz`)                                                                 |
+| **Services/**                | 🚧 Handle external service interactions (e.g., `FirebaseService` for database/auth, `CloudinaryService` for images, `AIService` for Groq API) |
+| **Utilities/**               | 💡 Helper classes and utilities (e.g., `UserDefaultsUtil` for local storage, `NavigationUtil` for centralized navigation management)          |
+| **ViewModels/**              | 🔄 Manage state and business logic for each screen following MVVM architecture (e.g., `AuthViewModel`, `NoteViewModel`, `DashboardViewModel`) |
+| **Views/**                   | 🔺 SwiftUI View files representing UI components/screens (e.g., `LoginView`, `NoteListView`, `NoteDetailsView`, `DashboardView`)              |
+| **AppConstants.swift**       | 📁 Contains shared constants used throughout the app (like colors, config keys).                                                              |
+| **Assets/**                  | 🖼️ Resource files like images, colors used in SwiftUI.                                                                                        |
+| **GoogleService-Info.plist** | 📄 Firebase configuration file required for Authentication and Firestore services.                                                            |
+| **StudySnapApp.swift**       | 📲 Main entry point of the app (`@main`), setting up the root view and injecting environment objects.                                         |
+| **.env**                     | 🔑 Securely stores API keys and environment-sensitive data.                                                                                   |
 
 ---
 
@@ -74,11 +75,12 @@ The project emphasizes clean code practices, scalable architecture, and seamless
 ## 👨‍💼 Author
 
 **Fendy Lomanjaya**  
-Developed as part of a study project with production-level design patterns.
+**[Mohammad Hasin Bin Sadique](https://www.linkedin.com/in/hasin-s-636782136/)**
+
+Developed as part of a study project with production-level design patterns following the best industry practices.
 
 ---
 
 Ready to scale. Ready to innovate. 🌟
 
 ---
-
