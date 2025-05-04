@@ -29,7 +29,7 @@ class AuthViewModel: ObservableObject {
             DispatchQueue.main.async {
                 self?.user = user
                 if user != nil {
-                    self?.navigator.replaceWith(.home)
+//                    self?.navigator.replaceWith(.home)
                 }
             }
         }

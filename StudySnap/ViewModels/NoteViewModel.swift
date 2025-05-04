@@ -91,6 +91,26 @@ class NoteViewModel: ObservableObject {
             }
         }
     }
+    
+    func delete(note: Note, completion: @escaping (Bool) -> Void) {
+        FirebaseService.shared.deleteDocument(
+            collection: "notes",
+            documentId: note.id
+        ) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    print("🗑️ Successfully deleted note: \(note.id)")
+                    // Optionally remove from local notes array
+                    self.notes.removeAll { $0.id == note.id }
+                    completion(true)
+                case .failure(let error):
+                    print("❌ Error deleting note: \(error.localizedDescription)")
+                    completion(false)
+                }
+            }
+        }
+    }
 
     func uploadImageAndAdd(to note: Note, item: PhotosPickerItem, completion: ((Note) -> Void)? = nil) {
         Task {
