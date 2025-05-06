@@ -39,3 +39,6 @@ class NavigationUtil: ObservableObject {
         path = [route]
     }
 }
+
+
+

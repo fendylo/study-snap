@@ -24,7 +24,7 @@ struct NoteListView: View {
                     ForEach(notes, id: \.id) { note in
                         NoteRowView(note: note)
                             .onTapGesture {
-                                nav.navigate(to: .noteDetails(note: note))
+                                // nav.navigate(to: .noteDetails(note: note))
                             }
                     }
                 }
@@ -74,6 +74,8 @@ struct NoteRowView: View {
     }
 }
 
-#Preview {
-    NoteListView()
+struct NoteListView_Previews: PreviewProvider {
+    static var previews: some View {
+        NoteListView()
+    }
 }

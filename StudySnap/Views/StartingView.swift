@@ -22,6 +22,10 @@ struct StartingView: View {
 //            }
             VStack {
                 // Optional welcome/splash screen
+                Image("../../Study.png")
+                    .resizable()
+                    .frame(width: 100, height: 100)
+                    .padding()
                 Text("Welcome to StudySnap")
                     .font(.largeTitle.bold())
                     .padding()
@@ -31,7 +35,7 @@ struct StartingView: View {
 
                 Button("Continue") {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        if let storedUser = UserDefaultUtil.get(User.self, forKey: "currentUser") {
+                        if UserDefaultUtil.get(User.self, forKey: "currentUser") != nil {
 //                            authVM.user = storedUser
                             nav.replaceWith(.home)
                         } else {
@@ -60,6 +64,8 @@ struct StartingView: View {
     }
 }
 
-#Preview {
-    StartingView()
+struct StartingView_Previews: PreviewProvider {
+    static var previews: some View {
+        StartingView()
+    }
 }
