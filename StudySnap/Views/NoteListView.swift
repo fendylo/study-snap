@@ -14,68 +14,95 @@ struct NoteListView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            Text("My Notes")
-                .font(.title)
+            HStack {
+                Text("📝 My Notes")
+                    .font(.largeTitle.bold())
+                    .foregroundColor(Color("Primary"))
+                Spacer()
+            }
 
             if let storedUser = UserDefaultUtil.get(User.self, forKey: "currentUser") {
-                LazyVStack(alignment: .leading, spacing: 12) {
-                    let notes = viewModel.notes
-
-                    ForEach(notes, id: \.id) { note in
-                        NoteRowView(note: note)
-                            .onTapGesture {
-                                // nav.navigate(to: .noteDetails(note: note))
+                if viewModel.notes.isEmpty {
+                    Spacer()
+                    Text("No notes yet. Tap + New Note to get started!")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding()
+                    Spacer()
+                } else {
+                    ScrollView {
+                        LazyVStack(spacing: 12) {
+                            ForEach(viewModel.notes, id: \.id) { note in
+                                NoteRowView(note: note)
+                                    .onTapGesture {
+                                        nav.navigate(to: .noteDetails(note: note))
+                                    }
+                                    .transition(.scale)
                             }
+                        }
+                        .padding(.vertical, 4)
                     }
                 }
-                .onAppear {
-                    currentUserId = storedUser.id
-                    viewModel.fetchNotes(for: currentUserId)
-                }
             } else {
-                Text("No user found.")
+                Text("⚠️ No user found.")
                     .foregroundColor(.red)
             }
 
-            Spacer()
-
-            Button("+ New Note") {
+            Button(action: {
                 viewModel.createNewNote(for: currentUserId) { newNote in
                     nav.navigate(to: .noteDetails(note: newNote))
                 }
+            }) {
+                HStack {
+                    Image(systemName: "plus.circle.fill")
+                    Text("New Note")
+                        .fontWeight(.semibold)
+                }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color("Primary"))
+                .foregroundColor(.white)
+                .cornerRadius(12)
+                .shadow(radius: 4)
             }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(Color("Primary"))
-            .foregroundColor(.white)
-            .cornerRadius(10)
+            .padding(.top)
+
         }
         .padding()
+        .onAppear {
+            if let storedUser = UserDefaultUtil.get(User.self, forKey: "currentUser") {
+                currentUserId = storedUser.id
+                viewModel.fetchNotes(for: currentUserId)
+            }
+        }
     }
 }
-
 
 struct NoteRowView: View {
     let note: Note
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 6) {
             Text(note.title.isEmpty ? "Untitled Note" : note.title)
                 .font(.headline)
+                .foregroundColor(Color("Primary"))
 
-            Text(note.content.first ?? "")
-                .font(.subheadline)
-                .lineLimit(2)
-                .foregroundColor(.gray)
+            if let firstLine = note.content.first, !firstLine.starts(with: "http") {
+                Text(firstLine)
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+                    .lineLimit(2)
+            }
         }
         .padding()
-        .background(Color.gray.opacity(0.1))
-        .cornerRadius(8)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color("Secondary").opacity(0.15))
+        .cornerRadius(12)
+        .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 2)
+        .animation(.easeInOut(duration: 0.2), value: note.id)
     }
 }
-
-struct NoteListView_Previews: PreviewProvider {
-    static var previews: some View {
-        NoteListView()
-    }
+#Preview {
+    NoteListView()
 }
