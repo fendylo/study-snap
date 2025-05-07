@@ -15,6 +15,7 @@ struct HomeView: View {
     }
 
     @State private var selectedTab: Tab = .notes
+    @EnvironmentObject var authVM: AuthViewModel
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -36,10 +37,13 @@ struct HomeView: View {
                 }
                 .tag(Tab.dashboard)
         }
-        .accentColor(Color("Primary")) // Optional: your custom theme color
+        .tint(Color("Primary")) // Updated from accentColor to tint for iOS 15+
     }
 }
 
-#Preview {
-    HomeView()
+struct HomeView_Previews: PreviewProvider {
+    static var previews: some View {
+        HomeView()
+            .environmentObject(AuthViewModel())
+    }
 }
