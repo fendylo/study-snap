@@ -14,6 +14,8 @@
 import Foundation
 
 class QuizViewModel: ObservableObject {
+    @Published var quizzes: [Quiz] = []
+
     
     func generateQuiz(for note: Note, completion: @escaping (Result<Void, Error>) -> Void) {
         let pureTexts = note.content.filter { !$0.lowercased().starts(with: "http") }
@@ -95,6 +97,7 @@ class QuizViewModel: ObservableObject {
                             switch result {
                             case .success:
                                 print("✅ Quiz saved successfully to Firestore.")
+                                print("🧪 Generated Quiz Object: \(quiz)")
                                 completion(.success(()))
                             case .failure(let error):
                                 print("❌ Failed to save quiz: \(error.localizedDescription)")
@@ -119,4 +122,29 @@ class QuizViewModel: ObservableObject {
         var topic: String
         var questions: [QuizQuestion]
     }
+    
+    func fetchQuizzes() {
+        guard let user = UserDefaultUtil.get(User.self, forKey: "currentUser") else {
+            print("❌ No logged-in user.")
+            return
+        }
+
+        FirebaseService.shared.getCollection(
+            collection: "quizzes",
+            model: Quiz.self,
+            filters: [["userId": user.id]]
+        ) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let quizzes):
+                    self.quizzes = quizzes
+                    print("✅ Loaded \(quizzes.count) quizzes for user \(user.id)")
+                case .failure(let error):
+                    print("❌ Error fetching quizzes: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+
+
 }
