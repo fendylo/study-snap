@@ -1,24 +1,71 @@
-//
-//  QuizView.swift
-//  StudySnap
-//
-//  Created by Fendy Lomanjaya on 25/4/2025.
-//
-
 import SwiftUI
 
 struct QuizView: View {
-    // please use QuizViewModel.swift to store all your logic code (this file is just the UI and call the logic functions from the ViewModel)
-    // this view will show a list of created quiz for this active user
-    // when a particular quiz is clicked it will navigate the user to a new page to take the quiz
-    // when the user clicks the quiz that they have done, it also navigates the user to quiz detail to review their past answers and the actual correct answers
-    // when the user is done with the quiz, navigate to new page to show the score that the user gets
-    // in summary, there will be 3 pages to handle quiz features
-    var body: some View {
-        Text("List of Created Quizzes")
-    }
-}
+    @StateObject private var viewModel = QuizViewModel()
+    @State private var navigateBack = false
 
-#Preview {
-    QuizView()
-}
+    var body: some View {
+            VStack {
+                if viewModel.quizzes.isEmpty {
+                    VStack(spacing: 16) {
+                        Image(systemName: "doc.text.magnifyingglass")
+                            .resizable()
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.gray)
+                        Text("No quizzes found.")
+                            .font(.title3)
+                            .foregroundColor(.secondary)
+                        Text("Generate a quiz from your notes to get started.")
+                            .font(.body)
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.gray)
+                    }
+                    .padding()
+                } else {
+                    List(viewModel.quizzes) { quiz in
+                        NavigationLink(destination: {
+                            if let _ = quiz.completedAt {
+                                QuizResultView(quiz: quiz, selectedAnswers: [:])
+                            } else {
+                                QuizDetailView(quiz: quiz)
+                            }
+                        }) {
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text(quiz.topic)
+                                        .font(.headline)
+                                    Text("Created: \(quiz.createdAt.formatted(date: .abbreviated, time: .shortened))")
+                                        .font(.caption)
+                                        .foregroundColor(.gray)
+                                }
+                                Spacer()
+                                Image(systemName: quiz.completedAt != nil ? "checkmark.seal.fill" : "clock.fill")
+                                    .foregroundColor(quiz.completedAt != nil ? .green : .orange)
+                            }
+                        }
+
+                    }
+                    .listStyle(InsetGroupedListStyle())
+                }
+                NavigationLink(destination: HomeView(), isActive: $navigateBack) {
+                               EmptyView()
+                           }
+            }
+            .navigationTitle("My Quizzes")
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                            ToolbarItem(placement: .navigationBarLeading) {
+                                Button(action: {
+                                    navigateBack = true
+                                }) {
+                                    Label("Back", systemImage: "chevron.left")
+                                }
+                            }
+                        }
+            .onAppear {
+                viewModel.fetchQuizzes()
+            }
+        }
+    }
+
+
