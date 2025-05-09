@@ -24,6 +24,9 @@ struct DashboardView: View {
     @State private var isLoading = false
     @State private var errorMessage: String?
     @ObservedObject var dashboardVM = DashboardViewModel()
+    @ObservedObject var noteVM = NoteViewModel()
+
+    @State private var selectedNoteId: String = ""
     
     // @State private var user=authVM.user
     // @State private var isLoggedIn = authVM.user != nil
@@ -66,10 +69,18 @@ struct DashboardView: View {
                     }
                     .padding()
                 }
-                .navigationTitle("Dashboard")
+                // .navigationTitle("Dashboard")
                 .foregroundStyle(Color("Primary"))
-               .task {
-                   await dashboardVM.fetchAnalytics()
+               .task(priority: .background) {
+                   await dashboardVM.fetchUserQuizzes(noteId: selectedNoteId)
+                   if let user = authVM.user {
+                       noteVM.fetchNotes(for: user.id)
+                   }
+               }
+               .onChange(of: selectedNoteId) { oldValue, newValue in
+                   Task {
+                       await dashboardVM.fetchUserQuizzes(noteId: newValue)
+                   }
                }
                 // .background(
                 //     LinearGradient(gradient: Gradient(colors: [Color("Secondary"), Color("Tertiary")]), startPoint: .topLeading, endPoint: .bottomTrailing)
@@ -152,30 +163,76 @@ struct DashboardView: View {
     }
 
 
+    
+    
     private var analyticsSection: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Analytics")
-                .font(.title2)
-                .bold()
-                .foregroundStyle(Color("Primary"))
+            HStack {
+                Text("Analytics")
+                    .font(.title2)
+                    .bold()
+                    .foregroundStyle(Color("Primary"))
+            }
+            .padding(.bottom, 8)
 
             if dashboardVM.isLoading {
                 ProgressView()
                     .frame(maxWidth: .infinity)
+            } else if let error = dashboardVM.errorMessage {
+                Text(error)
+                    .foregroundStyle(.red)
+                    .frame(maxWidth: .infinity)
+                    .padding()
             } else if let analytics = dashboardVM.analytics {
-                Chart(analytics.topicPerformances) { performance in
-                    BarMark(
-                        x: .value("Score", performance.score),
-                        y: .value("Topic", performance.topic)
-                    )
-                    .foregroundStyle(Color.accentColor)
+                if analytics.isEmpty {
+                    Text(analytics.successMessage ?? "No data available")
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                } else {
+                    if let averageResult = analytics.averageResult {
+                        Text("Result: \(Int(averageResult * 100))%")
+                            .font(.title3)
+                            .bold()
+                            .foregroundStyle(averageResult <= 0.5 ? .red : 
+                                           averageResult <= 0.65 ? .orange : 
+                                           .green)
+                            .padding(.bottom, 8)
+                    }
+                    
+                    Chart(analytics.topicPerformances) { performance in
+                        BarMark(
+                            x: .value("Score", performance.score * 100),
+                            y: .value("Topic", performance.topic)
+                        )
+                        .foregroundStyle(Color.accentColor)
+                    }
+                    .chartXAxisLabel("Scores (%)")
+                    .frame(height: 250)
+                    
+                    if let feedback = analytics.feedback {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Feedback")
+                                .font(.headline)
+                                .foregroundStyle(Color("Primary"))
+                            Text(feedback)
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding(.top, 16)
+                    }
+                    
+                    if let message = analytics.successMessage {
+                        Text(message)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .padding(.top, 8)
+                    }
                 }
-                .chartXAxisLabel("Scores")
-                .frame(height: 250)
             } else {
-                Text("No data available.")
+                Text("No quizzes available for this note")
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity)
+                    .padding()
             }
         }
         .padding()
