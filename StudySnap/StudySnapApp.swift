@@ -31,7 +31,7 @@ struct StudySnapApp: App {
     
     var body: some Scene {
         WindowGroup {
-            StartingView()
+           StartingView()
                 .environmentObject(authVM)
         }
     }

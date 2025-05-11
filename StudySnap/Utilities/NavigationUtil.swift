@@ -18,6 +18,8 @@ enum AppRoute: Hashable {
     case register
     case home
     case noteDetails(note: Note)
+    case quizDetail(quiz: Quiz)
+    case quizResult(quiz: Quiz, selectedAnswers: [String: String])
 }
 
 class NavigationUtil: ObservableObject {
@@ -39,3 +41,6 @@ class NavigationUtil: ObservableObject {
         path = [route]
     }
 }
+
+
+

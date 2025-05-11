@@ -11,55 +11,98 @@ import SwiftUI
 struct StartingView: View {
     @ObservedObject private var nav = NavigationUtil.shared
     @EnvironmentObject var authVM: AuthViewModel
+    @State private var showSplash = true
 
     var body: some View {
-        NavigationStack(path: $nav.path) {
-//            // TODO: put splash screen here and navigate to the correct view based on the auth session status
-//            if isLogged {
-//                LoggedView()
-//            } else {
-//                LoginView()
-//            }
-            VStack {
-                // Optional welcome/splash screen
-                Text("Welcome to StudySnap")
-                    .font(.largeTitle.bold())
-                    .padding()
-                Text("This will be soon a splash screen")
-                    .font(.caption)
-                    .padding()
+        ZStack {
+            if showSplash {
+                SplashScreenView()
+                    .transition(.opacity)
+            } else {
+                NavigationStack(path: $nav.path) {
+                    VStack(spacing: 24) {
+                        Spacer()
 
-                Button("Continue") {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        if let storedUser = UserDefaultUtil.get(User.self, forKey: "currentUser") {
-//                            authVM.user = storedUser
-                            nav.replaceWith(.home)
-                        } else {
-                            nav.replaceWith(.login)
+                        VStack(spacing: 12) {
+                            
+                            Image(.logoNoBg)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 180, height: 180)
+                                .shadow(radius: 10)
+
+
+                            Text("Are you ready to learn something new today? 📖")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal)
+                                .italic()
+                        }
+
+
+                        Button(action: {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                if let storedUser = UserDefaultUtil.get(User.self, forKey: "currentUser") {
+                                    nav.replaceWith(.home)
+                                } else {
+                                    nav.replaceWith(.login)
+                                }
+                            }
+                        }) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "arrow.right.circle.fill")
+                                    .font(.title2)
+                                Text("Continue")
+                                    .fontWeight(.semibold)
+                            }
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color("Primary"))
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                            .shadow(radius: 5)
+                        }
+                        .padding(.horizontal)
+
+                        Spacer(minLength: 40)
+                    }
+                    .padding()
+                    .background(
+                        LinearGradient(gradient: Gradient(colors: [Color("Secondary"), Color("Tertiary")]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                            .ignoresSafeArea()
+                    )
+                    .navigationDestination(for: AppRoute.self) { route in
+                        switch route {
+                        case .login:
+                            LoginView()
+                        case .register:
+                            RegisterView()
+                        case .home:
+                            HomeView()
+                        case .noteDetails(let note):
+                            NoteDetailsView(note: note)
+                        case .quizDetail(let quiz):
+                            QuizDetailView(quiz:quiz)
+                        case .quizResult(let quiz, let selectedAnswers):
+                            QuizResultView(quiz:quiz, selectedAnswers: selectedAnswers)
                         }
                     }
                 }
-                .padding()
-                .background(Color("Primary"))
-                .foregroundColor(.white)
-                .cornerRadius(8)
             }
-            .navigationDestination(for: AppRoute.self) { route in
-                switch route {
-                case .login:
-                    LoginView()
-                case .register:
-                    RegisterView()
-                case .home:
-                    HomeView()
-                case .noteDetails(let note):
-                    NoteDetailsView(note: note)
+        }
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                withAnimation {
+                    self.showSplash = false
                 }
             }
         }
     }
 }
 
-#Preview {
-    StartingView()
+struct StartingView_Previews: PreviewProvider {
+    static var previews: some View {
+        StartingView()
+    }
 }

@@ -13,66 +13,124 @@ struct NoteListView: View {
     @State private var currentUserId: String = ""
 
     var body: some View {
-        VStack(spacing: 16) {
-            Text("My Notes")
-                .font(.title)
+        ZStack {
+            // MARK: — Background Gradient
+            LinearGradient(
+                gradient: Gradient(colors: [Color("Secondary"), Color("Tertiary")]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
 
-            if let storedUser = UserDefaultUtil.get(User.self, forKey: "currentUser") {
-                LazyVStack(alignment: .leading, spacing: 12) {
-                    let notes = viewModel.notes
-
-                    ForEach(notes, id: \.id) { note in
-                        NoteRowView(note: note)
-                            .onTapGesture {
-                                nav.navigate(to: .noteDetails(note: note))
-                            }
+            VStack(spacing: 0) {
+                // MARK: — Header
+                HStack {
+                    Text("📝 My Notes")
+                        .font(.largeTitle.weight(.bold))
+                        .foregroundColor(.white)
+                    Spacer()
+                    Button {
+                        viewModel.fetchNotes(for: currentUserId)
+                    } label: {
+                        Image(systemName: "arrow.clockwise.circle")
+                            .font(.title2)
+                            .foregroundColor(.white)
                     }
                 }
-                .onAppear {
-                    currentUserId = storedUser.id
-                    viewModel.fetchNotes(for: currentUserId)
+                .padding()
+
+                // MARK: — Content
+                if viewModel.notes.isEmpty {
+                    Spacer()
+                    VStack(spacing: 12) {
+                        Image(systemName: "note.text.badge.plus")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.white.opacity(0.7))
+                        Text("No notes yet")
+                            .font(.title3.weight(.semibold))
+                            .foregroundColor(.white)
+                        Text("Tap the + button to create your first note.")
+                            .font(.body)
+                            .foregroundColor(.white.opacity(0.85))
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 40)
+                    }
+                    Spacer()
+                } else {
+                    ScrollView {
+                        LazyVStack(spacing: 16) {
+                            ForEach(viewModel.notes) { note in
+                                NoteCardView(note: note)
+                                    .onTapGesture {
+                                        nav.navigate(to: .noteDetails(note: note))
+                                    }
+                                    .animation(.spring(), value: note.id)
+                            }
+                        }
+                        .padding()
+                    }
                 }
-            } else {
-                Text("No user found.")
-                    .foregroundColor(.red)
             }
-
-            Spacer()
-
-            Button("+ New Note") {
+        }
+        // MARK: — Floating Add Button
+        .overlay(
+            Button(action: {
                 viewModel.createNewNote(for: currentUserId) { newNote in
                     nav.navigate(to: .noteDetails(note: newNote))
                 }
+            }) {
+                Image(systemName: "plus")
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color("Primary"))
+                    .clipShape(Circle())
+                    .shadow(color: .black.opacity(0.3), radius: 5, x: 0, y: 3)
             }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(Color("Primary"))
-            .foregroundColor(.white)
-            .cornerRadius(10)
+            .padding(),
+            alignment: .bottomTrailing
+        )
+        .onAppear {
+            if let user = UserDefaultUtil.get(User.self, forKey: "currentUser") {
+                currentUserId = user.id
+                viewModel.fetchNotes(for: currentUserId)
+            }
         }
-        .padding()
     }
 }
 
-
-struct NoteRowView: View {
+struct NoteCardView: View {
     let note: Note
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 8) {
             Text(note.title.isEmpty ? "Untitled Note" : note.title)
                 .font(.headline)
+                .foregroundColor(.primary)
 
-            Text(note.content.first ?? "")
-                .font(.subheadline)
-                .lineLimit(2)
-                .foregroundColor(.gray)
+            if let snippet = note.content.first(where: { !$0.starts(with: "http") }) {
+                Text(snippet)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .lineLimit(2)
+            }
+
+            HStack {
+                Spacer()
+                Text(note.updatedAt, style: .date)
+                    .font(.caption2)
+                    .foregroundColor(.gray)
+            }
         }
         .padding()
-        .background(Color.gray.opacity(0.1))
-        .cornerRadius(8)
+        .background(Color("Secondary").opacity(0.2))
+        .cornerRadius(12)
+        .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
     }
 }
+
 
 #Preview {
     NoteListView()

@@ -48,6 +48,7 @@ class FirebaseService {
         fetchUserProfile(firebaseUser: firebaseUser) { result in
             switch result {
             case .success(let user):
+                UserDefaultUtil.set(user, forKey: "currentUser")
                 completion(user)
             case .failure(let error):
                 print("❌ Failed to fetch user profile: \(error.localizedDescription)")
@@ -143,4 +144,23 @@ class FirebaseService {
             }
         }
     }
+
+    func mergeDocument(
+        collection: String,
+        documentId: String,
+        data: [String: Any],
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        let ref = db.collection(collection).document(documentId)
+        ref.setData(data, merge: true) { error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(()))
+            }
+        }
+    }
+
 }
+
+
