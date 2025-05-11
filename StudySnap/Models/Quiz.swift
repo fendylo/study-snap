@@ -6,8 +6,9 @@
 //
 
 import SwiftUI
+import Foundation
 
-struct Quiz: Identifiable, Codable {
+struct Quiz: Identifiable, Codable, Hashable {
     var id: String
     var userId: String
     var noteId: String
@@ -18,7 +19,7 @@ struct Quiz: Identifiable, Codable {
     var score: Double?     // Nullable: filled after user finishes quiz
 }
 
-struct QuizQuestion: Codable, Identifiable {
+struct QuizQuestion: Codable, Identifiable, Hashable {
     var id: String { question } // Optional trick
     var question: String
     var choices: [String]

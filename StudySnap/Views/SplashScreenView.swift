@@ -26,7 +26,7 @@ struct SplashScreenView: View {
                 Image(.logoNoBg)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 120, height: 120)
+                    .frame(width: 180, height: 180)
                     .scaleEffect(scale)
                     .opacity(opacity)
                     .shadow(color: Color.black.opacity(0.25), radius: 12, x: 0, y: 8)

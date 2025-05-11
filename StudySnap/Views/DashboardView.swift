@@ -59,7 +59,14 @@ struct DashboardView: View {
 //        .padding()
 //    }
         var body: some View {
-//            NavigationStack {
+            ZStack {
+                LinearGradient(
+                    gradient: Gradient(colors: [Color("Secondary"), Color("Tertiary")]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
+                
                 ScrollView {
                     VStack(spacing: 16) {
                         headerSection
@@ -82,12 +89,7 @@ struct DashboardView: View {
                        await dashboardVM.fetchUserQuizzes(noteId: newValue)
                    }
                }
-                // .background(
-                //     LinearGradient(gradient: Gradient(colors: [Color("Secondary"), Color("Tertiary")]), startPoint: .topLeading, endPoint: .bottomTrailing)
-                //         .ignoresSafeArea()
-                // )
-    //            .background(Color("Background").ignoresSafeArea())
-//            }
+            }
         }
     private var headerSection: some View {
         HStack {
