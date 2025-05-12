@@ -70,5 +70,6 @@ struct QuizDetailView: View {
         }
         .navigationTitle("Take Quiz")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
     }
 }

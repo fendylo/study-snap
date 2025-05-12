@@ -107,6 +107,7 @@ struct RegisterView: View {
                 .padding(.vertical, 40)
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 
