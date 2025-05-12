@@ -4,6 +4,8 @@ import FirebaseFirestore
 
 struct QuizDetailView: View {
     let quiz: Quiz
+    
+    // It storing answers selected by user
     @State private var selectedAnswers: [String: String] = [:]
     @State private var showResult = false
 
@@ -20,6 +22,8 @@ struct QuizDetailView: View {
                             HStack {
                                 Text(choice)
                                 Spacer()
+                                
+                                // Showing checkmark icon on selected option
                                 if selectedAnswers[question.id] == choice {
                                     Image(systemName: "checkmark.circle.fill")
                                         .foregroundColor(.blue)
@@ -33,15 +37,14 @@ struct QuizDetailView: View {
                     }
                 }
             }
-
-            NavigationLink(
-                destination: QuizResultView(quiz: quiz, selectedAnswers: selectedAnswers),
-                isActive: $showResult
-            ) {
-                EmptyView()
+            .navigationDestination(isPresented: $showResult) {
+                QuizResultView(quiz: quiz, selectedAnswers: selectedAnswers)
             }
 
+
             Button("Submit Quiz") {
+                
+                // Calculating score of quiz
                 let correctCount = quiz.questions.filter { selectedAnswers[$0.id] == $0.answer }.count
                 let scorePercent = Double(correctCount) / Double(quiz.questions.count)
 
@@ -50,6 +53,7 @@ struct QuizDetailView: View {
                     "completedAt": Timestamp(date: Date())
                 ]
 
+               // This service is to store data in firestore
                 FirebaseService.shared.mergeDocument(
                     collection: "quizzes",
                     documentId: quiz.id,

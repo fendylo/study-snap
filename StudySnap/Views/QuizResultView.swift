@@ -7,7 +7,7 @@ struct QuizResultView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var navigateBack = false
     
-    
+    // Calculating users score
     var score: Int {
         quiz.questions.filter { selectedAnswers[$0.id] == $0.answer }.count
     }
@@ -33,11 +33,15 @@ struct QuizResultView: View {
                             
                             Spacer()
                             
+                            // This condition is if users selected option is correct
                             if selectedAnswers[q.id] == choice {
                                 if choice == q.answer {
                                     Image(systemName: "checkmark.circle.fill")
                                         .foregroundColor(.green)
-                                } else {
+                                }
+                                
+                                // UsÍ›ers selected option is wrong
+                                else {
                                     Image(systemName: "xmark.circle.fill")
                                         .foregroundColor(.red)
                                 }
@@ -50,9 +54,9 @@ struct QuizResultView: View {
                 }
                 .padding(.vertical, 4)
             }
-            NavigationLink(destination: QuizView(), isActive: $navigateBack) {
-                           EmptyView()
-                       }
+//            NavigationLink(destination: QuizView(), isActive: $navigateBack) {
+//                           EmptyView()
+//                       }
         }
         .padding()
         .navigationBarBackButtonHidden(true)
@@ -62,6 +66,9 @@ struct QuizResultView: View {
                     navigateBack = true
                 }
             }
+        }
+        .navigationDestination(isPresented: $navigateBack) {
+            QuizView()
         }
         
     }

@@ -6,6 +6,7 @@ struct QuizView: View {
 
     var body: some View {
             VStack {
+                // This condition is if no quiz is found it will show empty UI
                 if viewModel.quizzes.isEmpty {
                     VStack(spacing: 16) {
                         Image(systemName: "doc.text.magnifyingglass")
@@ -22,8 +23,10 @@ struct QuizView: View {
                     }
                     .padding()
                 } else {
+                    // ELse if quizzes found show them in list
                     List(viewModel.quizzes) { quiz in
                         NavigationLink(destination: {
+                            // This Condition is if quiz already given by user navigate to QuizResult view
                             if let _ = quiz.completedAt {
                                 QuizResultView(quiz: quiz, selectedAnswers: [:])
                             } else {
@@ -39,6 +42,7 @@ struct QuizView: View {
                                         .foregroundColor(.gray)
                                 }
                                 Spacer()
+                                // Showing Icon based on quiz pending or completed
                                 Image(systemName: quiz.completedAt != nil ? "checkmark.seal.fill" : "clock.fill")
                                     .foregroundColor(quiz.completedAt != nil ? .green : .orange)
                             }
@@ -63,6 +67,7 @@ struct QuizView: View {
                             }
                         }
             .onAppear {
+                // Calling fetchViews to fetch latest news when view appears
                 viewModel.fetchQuizzes()
             }
         }
