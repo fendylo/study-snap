@@ -13,6 +13,7 @@
 
 import Foundation
 
+// a view model to CRUD quiz
 class QuizViewModel: ObservableObject {
     @Published var quizzes: [Quiz] = []
 

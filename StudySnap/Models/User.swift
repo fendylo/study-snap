@@ -8,6 +8,8 @@
 import SwiftUI
 import FirebaseAuth
 
+// custom user object for firebase and app model
+
 struct User: Identifiable, Codable {
     var id: String
     var email: String

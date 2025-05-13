@@ -1,5 +1,6 @@
 import SwiftUI
 
+//  a page that shows list of quiz
 struct QuizView: View {
     @ObservedObject private var nav = NavigationUtil.shared
     @StateObject private var viewModel = QuizViewModel()

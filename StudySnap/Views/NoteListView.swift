@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// a page that shows the list of note
 struct NoteListView: View {
     @ObservedObject private var nav = NavigationUtil.shared
     @StateObject private var viewModel = NoteViewModel()

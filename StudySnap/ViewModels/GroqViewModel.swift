@@ -1,6 +1,8 @@
 import Foundation
 import Combine
 
+
+// this is a view model to interact with Groq API
 class GroqViewModel: ObservableObject {
     @Published var prompt: String = ""
     @Published var responseText: String = ""

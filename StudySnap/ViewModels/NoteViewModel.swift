@@ -19,6 +19,8 @@ import Foundation
 import SwiftUI
 import PhotosUI
 
+
+// a view model to CRUD note
 class NoteViewModel: ObservableObject {
     @Published var notes: [Note] = []
     @Published var isLoading = false

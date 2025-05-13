@@ -1,5 +1,6 @@
 import SwiftUI
 
+// a page that shows the result of the quiz
 struct QuizResultView: View {
     let quiz: Quiz
     let selectedAnswers: [String: String]
@@ -28,7 +29,7 @@ struct QuizResultView: View {
             ScrollView {
                 VStack(spacing: 24) {
                     // MARK: Header
-                    Text("🎉 Quiz Results")
+                    Text("Quiz Results")
                         .font(.system(size: 34, weight: .bold))
                         .foregroundColor(.white)
 
