@@ -5,11 +5,6 @@
 //  Created by Hasin Sadique on 21/4/2025.
 //
 
-//NOTE:
-//Review DashboardView.swift to have ideas about the dashboard feature
-//Aggregates user progress data, performance and other beneficial insights
-//Used in: DashboardView
-
 
 import SwiftUI
 import Combine
@@ -38,6 +33,9 @@ class DashboardViewModel: ObservableObject {
 
     private var cancellables = Set<AnyCancellable>()
 
+    /// Fetches and processes quiz data for analytics visualization
+    /// Parameter noteId: Optional note ID to filter quizzes for a specific note
+    /// Returns: Updates analytics property with processed quiz data and AI feedback
     func fetchUserQuizzes(noteId: String) async {
         guard let user = UserDefaultUtil.get(User.self, forKey: "currentUser") else {
             self.errorMessage = "No logged-in user found. Please log in again."
@@ -123,6 +121,9 @@ class DashboardViewModel: ObservableObject {
         }
     }
 
+    // Generates AI-powered feedback based on user's quiz performance
+    // Parameter averageScore: The user's average quiz score
+    //  Parameter completion: Callback with the generated feedback message
     private func getAIFeedback(averageScore: Double, completion: @escaping (String) -> Void) {
         let systemPrompt = "You are a helpful educational assistant. Provide brief, encouraging feedback based on the student's quiz performance."
         let userPrompt = "The student has an average quiz score of \(Int(averageScore * 100))%. Please provide a brief, analytical feedback message (2-3 sentences maximum). Suggest how to improve if average score is below 50%"
@@ -138,6 +139,8 @@ class DashboardViewModel: ObservableObject {
         }
     }
 
+    /// Retrieves all notes associated with the current user
+    /// Returns: Updates the view model with fetched notes data
     func fetchUserNotes() async {
         guard let user = UserDefaultUtil.get(User.self, forKey: "currentUser") else {
             print("❌ No logged-in user.")
@@ -167,28 +170,4 @@ class DashboardViewModel: ObservableObject {
 
     
 
-    // func fetchAnalytics() async {
-    //     isLoading = true
-    //     defer { isLoading = false }
-
-    //     do {
-    //         // Simulate fetching data from your backend or database
-    //         // Replace this with actual data fetching logic
-    //         try await Task.sleep(nanoseconds: 1_000_000_000) // simulate delay
-
-    //         // Sample analytics data
-    //         let sampleData = Analytics(topicPerformances: [
-    //             TopicPerformance(topic: "Mathematics", score: 85),
-    //             TopicPerformance(topic: "Physics", score: 78),
-    //             TopicPerformance(topic: "Chemistry", score: 90),
-    //             TopicPerformance(topic: "Biology", score: 72)
-    //         ])
-
-    //         // self.analytics = sampleData
-    //         self.analytics = sampleData
-
-    //     } catch {
-    //         self.errorMessage = "Failed to load analytics: \(error.localizedDescription)"
-    //     }
-    // }
 }
