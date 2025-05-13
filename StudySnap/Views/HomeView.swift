@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// a page that shows 3 navigation tabs, note taking, quiz, and dashboard
+
 struct HomeView: View {
     enum Tab {
         case notes

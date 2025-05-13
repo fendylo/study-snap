@@ -1,8 +1,12 @@
 import SwiftUI
 import FirebaseFirestore
 
+// quiz taking page
 struct QuizDetailView: View {
+    
     let quiz: Quiz
+    
+    // It storing answers selected by user
     @State private var selectedAnswers: [String: String] = [:]
     @State private var showResult = false
 
@@ -89,7 +93,7 @@ struct QuizDetailView: View {
             case .success:
                 showResult = true
             case .failure(let error):
-                print("❌ Failed to update quiz result: \(error.localizedDescription)")
+                print("Failed to update quiz result: \(error.localizedDescription)")
             }
         }
     }

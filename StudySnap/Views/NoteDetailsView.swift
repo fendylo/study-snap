@@ -15,6 +15,8 @@ enum ActiveSheet: Identifiable {
     var id: Int { hashValue }
 }
 
+
+// a page to note taking, ask AI, and generate Quiz
 struct NoteDetailsView: View {
     // Navigation
     @ObservedObject private var nav = NavigationUtil.shared
