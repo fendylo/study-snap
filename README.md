@@ -1,7 +1,9 @@
 # 📘 StudySnap: Smart Study Companion
 
 **GitHub:** https://github.com/fendylo/study-snap
+
 **Please contact the developers to get the environment variables and API Keys**
+
 **The App requires the environment variables to run**
 
 StudySnap is an iOS native app built with **SwiftUI** that empowers students to capture notes, query them with AI, auto-generate quizzes, and track progress on a beautiful dashboard. Backed by Firebase (Auth + Firestore) and Groq API for AI, it follows a clean MVVM architecture for maintainability and scalability.
@@ -65,8 +67,11 @@ StudySnap is an iOS native app built with **SwiftUI** that empowers students to 
 
 ### Environment Variables
 GROQ_API_KEY=XXX
+
 CLOUDINARY_CLOUD_NAME=XXXX
+
 CLOUDINARY_UPLOAD_PRESET=XXXX
+
 GROQ_MODEL_NAME=XXXX
 
 ---
