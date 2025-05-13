@@ -24,22 +24,15 @@ struct StartingView: View {
                         Spacer()
 
                         VStack(spacing: 12) {
+                            
                             Image(.logoNoBg)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 120, height: 120)
+                                .frame(width: 180, height: 180)
                                 .shadow(radius: 10)
 
-                            Text("Welcome to")
-                                .font(.headline)
-                                .foregroundColor(.gray)
 
-                            Text("📚 StudySnap")
-                                .font(.system(size: 36, weight: .bold))
-                                .foregroundColor(Color("Primary"))
-                                .multilineTextAlignment(.center)
-
-                            Text("Are you ready to learn something new today?")
+                            Text("Are you ready to learn something new today? 📖")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                                 .multilineTextAlignment(.center)
@@ -47,7 +40,6 @@ struct StartingView: View {
                                 .italic()
                         }
 
-                        
 
                         Button(action: {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -90,6 +82,10 @@ struct StartingView: View {
                             HomeView()
                         case .noteDetails(let note):
                             NoteDetailsView(note: note)
+                        case .quizDetail(let quiz):
+                            QuizDetailView(quiz:quiz)
+                        case .quizResult(let quiz, let selectedAnswers):
+                            QuizResultView(quiz:quiz, selectedAnswers: selectedAnswers)
                         }
                     }
                 }
