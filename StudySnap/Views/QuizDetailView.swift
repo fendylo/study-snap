@@ -64,6 +64,11 @@ struct QuizDetailView: View {
         }
         .navigationTitle("Take Quiz")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .padding()
+        .background(Color.white.opacity(0.8))
+        .cornerRadius(12)
+        .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
     }
 
     private func submit() {

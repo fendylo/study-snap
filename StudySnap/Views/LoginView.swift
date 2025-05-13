@@ -78,7 +78,7 @@ struct LoginView: View {
                     
                     // MARK: — Register Link
                     HStack {
-                        Text("Don’t have an account?")
+                        Text("Don't have an account?")
                             .foregroundColor(.primary.opacity(0.9))
                             .italic()
                         Button("Register") {
@@ -94,6 +94,7 @@ struct LoginView: View {
                 .padding(.vertical, 40)
             }
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 
